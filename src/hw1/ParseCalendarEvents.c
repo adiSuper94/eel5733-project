@@ -9,7 +9,7 @@ int main() {
         struct CalendarEvent *event = getCalendarEvent(line);
         if(event != NULL){
             printf("%s,%s,%s\n", event->date, event->time, event->location);
-            free(event);
+            free_event(event);
         }
     }
     free(line);

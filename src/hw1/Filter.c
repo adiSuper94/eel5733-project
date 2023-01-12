@@ -26,12 +26,7 @@ struct CalendarEvent* getCalendarEvent(char *subject){
   if(strcmp(action, "C") !=0 && strcmp(action, "D") !=0 && strcmp(action, "X") !=0){
     return NULL;
   }
-  struct CalendarEvent *event = (struct CalendarEvent*) malloc(sizeof(struct CalendarEvent));
-  event->action = action;
-  event->title = title;
-  event->location = location;
-  event->time = time;
-  event->date = date;
+  struct CalendarEvent *event = initCalendarEvent(action, title, date, time, location); 
   return event;
 }
 
