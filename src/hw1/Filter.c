@@ -1,4 +1,5 @@
 #include "Filter.h"
+#include <regex.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -41,7 +42,7 @@ struct CalendarEvent* getCalendarEvent(char *subject){
   char *location = malloc(sizeof(char) * 20);
   char *time = malloc(sizeof(char) * 20);
   char *date = malloc(sizeof(char) * 20);
-  sscanf(subject, "%[^,],%10[^,],%[^,a-zA-Z],%[^,a-zA-Z],%s", action, title, date, time, location);
+  sscanf(subject, "%[^,],%[^,],%[^,a-zA-Z],%[^,a-zA-Z],%s", action, title, date, time, location);
 
   if(!isValidString(title, 20) || !isValidString(date, 20) || !isValidString(time, 20) || !isValidString(location, 20)){
     freeMem(action, title, date, time, location);
@@ -51,6 +52,25 @@ struct CalendarEvent* getCalendarEvent(char *subject){
     freeMem(action, title, date, time, location);
     return NULL;
   }
+  if(strlen(title) != 10){
+    freeMem(action, title, date, time, location);
+    return NULL;
+  }
+  //printf("Debug::\tdate: %s \ttime:%s\n", date, time);
+  regex_t timeRegex, dateRegex;
+  int r1 = regcomp(&dateRegex, "[0-9]?[0-9]\\/[0-9]?[0-9]\\/[0-9]{4}", REG_EXTENDED|REG_NOSUB);
+  int r2 = regcomp(&timeRegex, "[012]?[0-9]:[0-9]{2}", REG_EXTENDED|REG_NOSUB);
+  int dateMatchRes = regexec(&dateRegex, date, 0, NULL, 0);
+  int timeMatchRes = regexec(&timeRegex, time, 0, NULL, 0);
+  if(dateMatchRes != 0 || timeMatchRes != 0){
+    //printf("%d -- %d \n", regexec(&dateRegex, date, 0, NULL, 0), regexec(&timeRegex, time, 0, NULL, 0));
+    freeMem(action, title, date, time, location);
+    regfree(&dateRegex);
+    regfree(&timeRegex);
+    return NULL;
+  }
+  regfree(&dateRegex);
+  regfree(&timeRegex);
   struct CalendarEvent *event = initCalendarEvent(action, title, date, time, location);
   return event;
 }
