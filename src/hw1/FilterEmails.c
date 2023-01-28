@@ -4,16 +4,16 @@
 #include <string.h>
 
 int main() {
-    char *line = malloc(sizeof(char) * 100);
-    while(scanf("%[^\n]\n", line) != EOF){
-        char *res = filterEmail(line);
-        free(line);
-        line = malloc(sizeof(char) * 100);
-        if(res != NULL){
-            printf("%s\n", res);
-            free(res);
-        }
-    }
+  char *line = malloc(sizeof(char) * 100);
+  while (scanf("%[^\n]\n", line) != EOF) {
+    char *res = filterEmail(line);
     free(line);
-    return 0;
+    line = malloc(sizeof(char) * 100);
+    if (res != NULL) {
+      printf("%s\n", res);
+      free(res);
+    }
+  }
+  free(line);
+  return 0;
 }
