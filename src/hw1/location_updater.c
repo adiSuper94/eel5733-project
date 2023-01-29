@@ -58,8 +58,8 @@ void createEmailFilterProcess(int ipcPipe[], int inputPipe[]) {
     close(ipcPipe[1]);
     char cwd[1024];
     getcwd(cwd, sizeof(cwd));
-    strcat(cwd, "/filter-emails");
-    execl(cwd, "filter-emails", (char *)NULL);
+    strcat(cwd, "/email_filter");
+    execl(cwd, "email_filter", (char *)NULL);
     exit(EXIT_FAILURE);
     break;
   default:
@@ -86,8 +86,8 @@ void createCalendarFilterProcess(int ipcPipe[], int unusedInputPipe[]) {
     close(ipcPipe[0]);
     char cwd[1024];
     getcwd(cwd, sizeof(cwd));
-    strcat(cwd, "/parse-calendar-events");
-    execl(cwd, "parse-calendar-events", (char *)NULL);
+    strcat(cwd, "/calendar_filter");
+    execl(cwd, "calendar_filter", (char *)NULL);
     exit(EXIT_FAILURE);
     break;
   default:
