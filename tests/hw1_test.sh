@@ -24,9 +24,8 @@ if [ ! -e "$ef_bin" ] || [ ! -e "$cf_bin" ] || [ ! -e "$lu_bin" ]; then
 fi
 
 cf_test_inputs_dir=$tests_dir/inputs/hw1/calendar-filter
-lu_test_inputs_dir=$tests_dir/inputs/hw1/email-filter
-cf_test_inputs=$(ls "$tests_dir/inputs/hw1/calendar-filter")
-lu_test_inputs=$(ls "$tests_dir/inputs/hw1/email-filter")
+ef_test_inputs_dir=$tests_dir/inputs/hw1/email-filter
+lu_test_inputs_dir=$tests_dir/inputs/hw1/location-updater
 
 if [ ! -e "$cf_test_inputs_dir" ] || [ ! -e "$lu_test_inputs_dir" ]; then
   echo "Error: Sorry, you might have to test manually! Or Debug this :("
@@ -35,15 +34,20 @@ fi
 
 cf_output_dir=$tests_dir/outputs/hw1/calendar-filter
 ef_output_dir=$tests_dir/outputs/hw1/email-filter
-if [ ! -e "$cf_output_dir" ] || [ ! -e "$ef_output_dir" ]; then
+lu_output_dir=$tests_dir/outputs/hw1/location-updater
+
+rm -rf $cf_output_dir
+rm -rf $ef_output_dir
+rm -rf $lu_output_dir
+
+mkdir -p $cf_output_dir
+mkdir -p $ef_output_dir
+mkdir -p $lu_output_dir
+
+if [ ! -e "$cf_output_dir" ] || [ ! -e "$lu_output_dir" ]; then
   echo "Error: Output dirs not created. Sorry, you might have to test manually! Or Debug this :("
   exit 1
 fi
-rm -rf $cf_output_dir
-rm -rf $ef_output_dir
-mkdir -p $cf_output_dir
-mkdir -p $ef_output_dir
-
 echo "=====STARTING TESTS=====\n"
 
 cd $build_dir
@@ -55,11 +59,18 @@ done
 echo "OUTPUT GENERATED in $cf_output_dir\n"
 
 echo "RUNNING location_updater TESTS IN : $lu_test_inputs_dir"
-for i_f in $lu_test_inputs_dir/*.txt; do
+for i_f in $ef_test_inputs_dir/*.txt; do
   o_f=$ef_output_dir/$(basename "$i_f" | sed s/input/output/)
-  ($lu_bin < "$i_f") > $o_f
+  ($ef_bin < "$i_f") > $o_f
 done
 echo "OUTPUT GENERATED in $ef_output_dir\n"
+
+echo "RUNNING location_updater TESTS IN : $lu_test_inputs_dir"
+for i_f in $lu_test_inputs_dir/*.txt; do
+  o_f=$lu_output_dir/$(basename "$i_f" | sed s/input/output/)
+  ($lu_bin < "$i_f") > $o_f
+done
+echo "OUTPUT GENERATED in $lu_output_dir\n"
 
 
 echo "==========END==========="

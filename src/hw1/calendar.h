@@ -10,6 +10,7 @@ struct CalendarDate {
   char *date;
   struct CalendarEvent *events;
   struct CalendarDate *nextDate;
+  struct CalendarEvent *earliestEvent;
 };
 
 struct Calendar {
@@ -33,7 +34,11 @@ static inline struct CalendarEvent *createCalendarEvent(char *action, char *titl
   event->date = date;
   return event;
 }
-
+static inline struct Calendar *createCalendar() {
+  struct Calendar *cal = (struct Calendar *)malloc(sizeof(struct Calendar));
+  cal->calendarDate = NULL;
+  return cal;
+}
 static inline void free_event(struct CalendarEvent *event) {
   free(event->action);
   free(event->title);
