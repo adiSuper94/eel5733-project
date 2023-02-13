@@ -23,6 +23,41 @@ bool isValidString(char *str, int size) {
   }
   return true;
 }
+
+char *filterCalendarEvent(char *eventStr, struct Calendar *cal) {
+  struct CalendarEvent *event = parseEmailSubject(eventStr);
+  if (event == NULL) {
+    return NULL;
+  }
+  insertCalendarEvent(cal, event->date, event);
+  struct CalendarEvent *earliestEvent = getEarliestEvent(cal, event->date);
+  char *line = malloc(sizeof(char) * 100);
+  if (earliestEvent == NULL) {
+    strcpy(line, event->date);
+    strcat(line, ",--:--,NA");
+    return line;
+  }
+  struct CalendarDate *calDate = getCalendarDate(cal, event->date);
+  if (strcmp(earliestEvent->title, event->title) != 0) {
+    if (calDate->earliestEvent == NULL ||
+        strcmp(calDate->earliestEvent->title, earliestEvent->title) == 0) {
+      free(line);
+      return NULL;
+    }
+  }
+  calDate->earliestEvent = earliestEvent;
+  strcpy(line, earliestEvent->date);
+  strcat(line, ",");
+  strcat(line, earliestEvent->time);
+  strcat(line, ",");
+  strcat(line, earliestEvent->location);
+  // printf("%s,%s,%s\n", earliestEvent->date, earliestEvent->time, earliestEvent->location);
+  if (strcmp(event->action, "C") != 0) {
+    free_event(event);
+  }
+  return line;
+}
+
 char *filterEmail(char *line) {
   char *subject = malloc(sizeof(char) * 100);
   sscanf(line, "Subject: %[^\n]", subject);
