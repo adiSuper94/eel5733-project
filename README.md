@@ -19,3 +19,8 @@ To install using apt repositories on ubuntu refer [this](https://askubuntu.com/q
 - There are three binaries associated with this assignment: `email_filter`, `calendar_filter` and `location-updater`.
 - Before running `location-updater` ensure that you are in the directory where all three binaries are.
 - run `./location-updater < input.txt` (input.txt is a placeholder)
+
+### Assignment 2
+- There is only one binary associated with the assignment: `threaded_location_updater`
+- run `./threaded_location_updater < input.txt` (input.txt is a placeholder)
+

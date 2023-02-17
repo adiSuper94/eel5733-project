@@ -71,11 +71,11 @@ char *filterEmail(char *line) {
 }
 
 struct CalendarEvent *parseEmailSubject(char *subject) {
-  char *action = malloc(sizeof(char) * 2);
-  char *title = malloc(sizeof(char) * 20);
-  char *location = malloc(sizeof(char) * 20);
-  char *time = malloc(sizeof(char) * 20);
-  char *date = malloc(sizeof(char) * 20);
+  char *action = calloc(sizeof(char), 20);
+  char *title = calloc(sizeof(char), 20);
+  char *location = calloc(sizeof(char), 20);
+  char *time = calloc(sizeof(char), 20);
+  char *date = calloc(sizeof(char), 20);
   sscanf(subject, "%[^,],%[^,],%[^,a-zA-Z],%[^,a-zA-Z],%[^\n]", action, title, date, time,
          location);
 
