@@ -15,7 +15,7 @@ int main() {
     }
     printf("%s\n", output);
     free(output);
-    line = malloc(sizeof(char) * 100);
+    // line = malloc(sizeof(char) * 100);
   }
   free(line);
   freeCalendar(cal);
