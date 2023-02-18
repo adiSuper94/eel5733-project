@@ -14,7 +14,7 @@ fi
 
 ef_bin=${build_dir}/email_filter
 cf_bin=${build_dir}/calendar_filter
-lu_bin=${build_dir}/location_updater
+lu_bin=${build_dir}/threaded_location_updater
 
 if [ ! -e "$ef_bin" ] || [ ! -e "$cf_bin" ] || [ ! -e "$lu_bin" ]; then
   echo "Error: build dir: $build_dir"

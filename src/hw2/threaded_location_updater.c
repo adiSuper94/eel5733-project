@@ -4,21 +4,30 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
-#define Q_SIZE 1
 
 pthread_mutex_t q_mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t q_not_full = PTHREAD_COND_INITIALIZER;
 pthread_cond_t q_not_empty = PTHREAD_COND_INITIALIZER;
 
+int qsize = 1;
 void emailFilterThread();
 void calendarFilterThread();
 
 char *safeRead();
 void safeWrite(char *line);
 
-int main() {
+int main(int argc, char **argv) {
+  if (argc != 2) {
+    printf("Error: Call this bin with an integer arg, specifying the size of the buffer/queue!\n");
+    exit(1);
+  }
   pthread_t emailFilter_t, calendarFilter_t;
   void *etStatus, *ctStatus;
+  int qsize = atoi(argv[1]);
+  if (qsize <= 0) {
+    printf("Error: Invalid args!! Call bin with buff/queue size > 0\n");
+    exit(2);
+  }
   initQ();
   pthread_create(&emailFilter_t, NULL, (void *)*emailFilterThread, NULL);
   pthread_create(&calendarFilter_t, NULL, (void *)*calendarFilterThread, NULL);
@@ -74,7 +83,7 @@ char *safeRead() {
 
 void safeWrite(char *line) {
   pthread_mutex_lock(&q_mutex);
-  if (sizeOfQ() >= Q_SIZE) {
+  if (sizeOfQ() >= qsize) {
     pthread_cond_wait(&q_not_full, &q_mutex);
   }
   insertIntoQ(line);
