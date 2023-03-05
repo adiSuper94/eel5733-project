@@ -24,3 +24,7 @@ To install using apt repositories on ubuntu refer [this](https://askubuntu.com/q
 - There is only one binary associated with the assignment: `threaded_location_updater`
 - run `./threaded_location_updater < input.txt` (input.txt is a placeholder)
 
+### Assignment 3
+- There is only one binary associated with the assignment: `eft`
+- run `./eft ./input.txt 5` (input.txt is a placeholder) , 5 is an example thread count
+
