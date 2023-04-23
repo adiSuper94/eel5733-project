@@ -23,7 +23,7 @@
 #define MODE1 1 // define mode here. There can be 2 modes
 #define MODE2 2
 
-static int majorNo = 700 , minorNo = 0;
+static int majorNo = 500 , minorNo = 0;
 
 static struct class *cl;
 struct e2_dev {
