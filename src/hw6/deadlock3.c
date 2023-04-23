@@ -15,6 +15,11 @@
 
 void *runner(){
 	int fd = open(DEVICE, O_RDWR);
+	if(fd < 0){
+		printf("Error while opening file.");
+		exit(-1);
+	}
+
 	sleep(1);
 	printf("Switching to MODE2\n");
 	ioctl(fd,E2_IOCMODE1,0); // This thread should be waiting at this line
@@ -27,6 +32,11 @@ void *runner(){
 int  main(){
 	pthread_t t1, t2;
 	int fd = open(DEVICE, O_RDWR);
+	if(fd < 0){
+		printf("Error while opening file.");
+		exit(-1);
+	}
+
 	printf("Main: witching to MODE2\n");
 	ioctl(fd,E2_IOCMODE2,0);
 	close(fd);

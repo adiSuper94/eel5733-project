@@ -17,8 +17,18 @@
 int main(int argc, char *argv[]) {
 	printf("opening device forst time\n");
 	int fd1 = open(DEVICE,O_RDWR);
+	if(fd1 < 0){
+		printf("Error while opening file.");
+		exit(-1);
+	}
+
 	printf("opening device second time\n");
 	int fd2 = open(DEVICE, O_RDWR);
+	if(fd2 < 0){
+		printf("Error while opening file.");
+		exit(-1);
+	}
+
 	printf("closing fd1\n");
 	close(fd1);
 	printf("closing fd2\n");

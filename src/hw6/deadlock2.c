@@ -14,8 +14,14 @@
 #define E2_IOCMODE2 _IO(CDRV_IOC_MAGIC, 2)
 
 void *openDev(){
-	sleep(1);
+	sleep(3);
 	int fd = open(DEVICE, O_RDWR); // this thread should be waiting at this line.
+	
+	if(fd < 0){
+		printf("Error while opening file.");
+		exit(-1);
+	}
+
 	close(fd);	
 	printf("Device opened and closed\n ");
 	pthread_exit(NULL);
@@ -23,6 +29,11 @@ void *openDev(){
 
 void *switchMode2(){
 	int fd = open(DEVICE, O_RDWR);
+	if(fd < 0){
+		printf("Error while opening file.");
+		exit(-1);
+	}
+
 	sleep(2);
 	printf("Switching to MODE2\n");
 	ioctl(fd,E2_IOCMODE2,0); // This thread should be waiting at this line
