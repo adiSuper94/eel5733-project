@@ -175,11 +175,11 @@ static int usb_kbd_event(struct input_dev *dev, unsigned int type, unsigned int 
     kbd->asp_mode = 1;
     printk(KERN_INFO "Switching to MODE 1\n");
   } else if (kbd->asp_mode == 2 && kbd->newleds == 0x01) {
-    printk(KERN_INFO "Nothing 2\n");
+    printk(KERN_INFO "caps off\n");
     kbd->newleds = 0x03;
   } else if (kbd->asp_mode == 2 && kbd->newleds == 0x03) {
     kbd->newleds = 0x01;
-    printk(KERN_INFO "Nothing\n");
+    printk(KERN_INFO "caps on\n");
   }
   printk(KERN_INFO "LED event occured. code: %u, value: %d, mode: %d\n", code, value,
          kbd->asp_mode);
