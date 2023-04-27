@@ -153,7 +153,6 @@ static int usb_kbd_event(struct input_dev *dev, unsigned int type, unsigned int 
   if (type != EV_LED)
     return -1;
 
-  printk(KERN_INFO "LED event occured. code: %u, value: %d, mode: %d", code, value, kbd->asp_mode);
   spin_lock_irqsave(&kbd->leds_lock, flags);
   kbd->newleds = (!!test_bit(LED_KANA, dev->led) << 3) | (!!test_bit(LED_COMPOSE, dev->led) << 3) |
                  (!!test_bit(LED_SCROLLL, dev->led) << 2) | (!!test_bit(LED_CAPSL, dev->led) << 1) |
@@ -169,21 +168,24 @@ static int usb_kbd_event(struct input_dev *dev, unsigned int type, unsigned int 
    * 7: All three LEDs are lit.
    */
   if (kbd->asp_mode == 1 && kbd->newleds == 0x01) {
-    printk(KERN_INFO "Switching to MODE2");
+    printk(KERN_INFO "Switching to MODE2 \n ");
     kbd->asp_mode = 2;
     kbd->newleds = 0x03;
   } else if (kbd->asp_mode == 2 && kbd->newleds == 0x00) {
     kbd->asp_mode = 1;
-    printk(KERN_INFO "Switching to MODE 1");
+    printk(KERN_INFO "Switching to MODE 1\n");
   } else if (kbd->asp_mode == 2 && kbd->newleds == 0x01) {
+    printk(KERN_INFO "Nothing 2\n");
     kbd->newleds = 0x03;
   } else if (kbd->asp_mode == 2 && kbd->newleds == 0x02) {
-    printk(KERN_INFO "Switching to MODE-1");
+    printk(KERN_INFO "Switching to MODE-1\n");
     kbd->asp_mode = 1;
   } else if (kbd->asp_mode == 2 && kbd->newleds == 0x03) {
     kbd->newleds = 0x02;
-    printk(KERN_INFO "Nothing");
+    printk(KERN_INFO "Nothing\n");
   }
+  printk(KERN_INFO "LED event occured. code: %u, value: %d, mode: %d\n", code, value,
+         kbd->asp_mode);
   if (kbd->led_urb_submitted) {
     spin_unlock_irqrestore(&kbd->leds_lock, flags);
     return 0;
