@@ -183,6 +183,7 @@ static int usb_kbd_event(struct input_dev *dev, unsigned int type,
 		printk(KERN_INFO "Switching to MODE2");
 		kbd->asp_mode = 2;
 		kbd->newleds = LED_NUML | LED_CAPSL
+	}
 	}else if(kbd->asp_mode == 2 && code == KEY_NUMLOCK){
 		printk(KERN_INFO "Switching to MODE1");
 		kbd->asp_mode = 1;
