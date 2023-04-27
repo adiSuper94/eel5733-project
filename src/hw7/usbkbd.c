@@ -179,12 +179,11 @@ static int usb_kbd_event(struct input_dev *dev, unsigned int type,
 	 * 6: The Caps Lock and Scroll Lock LEDs are lit.
 	 * 7: All three LEDs are lit.
 	 */
-	if(kbd->asp_mode == 1 && code == KEY_NUMLOCK && kbd->newleds  == LED_NUML){
+	if(kbd->asp_mode == 1 && kbd->newleds  == LED_NUML){
 		printk(KERN_INFO "Switching to MODE2");
 		kbd->asp_mode = 2;
-		kbd->newleds = LED_NUML | LED_CAPSL
-	}
-	}else if(kbd->asp_mode == 2 && code == KEY_NUMLOCK){
+		kbd->newleds = LED_NUML | LED_CAPSL;
+	}else if(kbd->asp_mode == 2 && kbd->newleds & LED_NUML == 1){
 		printk(KERN_INFO "Switching to MODE1");
 		kbd->asp_mode = 1;
 		kbd->newleds = kbd->newleds ^ LED_NUML;
@@ -192,6 +191,7 @@ static int usb_kbd_event(struct input_dev *dev, unsigned int type,
 		printk(KERN_INFO "Toggle CAPS LED");
 		kbd->newleds = kbd->newleds ^ LED_CAPSL;
 	}
+
 	if (kbd->led_urb_submitted){
 		spin_unlock_irqrestore(&kbd->leds_lock, flags);
 		return 0;
