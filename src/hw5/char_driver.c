@@ -5,10 +5,10 @@
 #include <linux/kernel.h>
 #include <linux/module.h> /* for modules */
 #include <linux/moduleparam.h>
-#include <linux/slab.h>    /* kmalloc */
+#include <linux/slab.h> /* kmalloc */
+#include <linux/string.h>
+#include <linux/types.h>
 #include <linux/uaccess.h> /* copy_(to,from)_user */
-#include <string.h>
-#include <sys/types.h>
 
 #define MYDEV_NAME "mycdrv"
 
@@ -33,7 +33,7 @@ struct asp_mycdrv {
 
 struct asp_mycdrv *devices; // Array of devices
 
-static ssize_t mycdrv_lseek(struct file *file, loff_t offset, int orig) {
+static loff_t mycdrv_lseek(struct file *file, loff_t offset, int orig) {
   loff_t pos;
   struct asp_mycdrv *dev_ptr = file->private_data;
   down_interruptible(&dev_ptr->sem);
@@ -117,19 +117,20 @@ static ssize_t mycdrv_write(struct file *file, const char __user *buf, size_t lb
 static ssize_t mycdrv_ioctl(struct file *file, unsigned int cmd, unsigned long arg) {
   int retval = 0;
   struct asp_mycdrv *dev = file->private_data;
-  if (_IO_TYPE(cmd) != CDRV_IOC_MAGIC) {
+  if (_IOC_TYPE(cmd) != CDRV_IOC_MAGIC) {
     return -ENOTTY;
   }
   switch (cmd) {
-  ASP_CLEAR_BUF:
+  case ASP_CLEAR_BUF:
     down_interruptible(&dev->sem);
     memset(dev->ramdisk, 0, ramdisk_size);
-    file->fpos = 0;
+    file->f_pos = 0;
     up(&dev->sem);
     break;
   default:
     break;
   }
+  return 0;
 }
 
 static const struct file_operations mycdrv_fops = {
@@ -138,13 +139,13 @@ static const struct file_operations mycdrv_fops = {
     .write = mycdrv_write,
     .open = mycdrv_open,
     .release = mycdrv_release,
-    .ioctl = mycdrv_ioctl,
-    .llseek = mycdev_lseek,
+    .unlocked_ioctl = mycdrv_ioctl,
+    .llseek = mycdrv_lseek,
 };
 
 static int __init my_init(void) {
   int result;
-  result = alloc_chrdev_region(&first, 0, NUM_DEVICES, DRIVER_NAME);
+  result = alloc_chrdev_region(&first, 0, NUM_DEVICES, MYDEV_NAME);
   if (result < 0) {
     printk(KERN_WARNING "can't get major");
     return result;
