@@ -107,7 +107,7 @@ static ssize_t mycdrv_write(struct file *file, const char __user *buf, size_t lb
     up(&dev->sem);
     return 0;
   }
-  nbytes = lbuf - copy_from_user(&dev->ramdisk + *ppos, buf, lbuf);
+  nbytes = lbuf - copy_from_user(dev->ramdisk + *ppos, buf, lbuf);
   *ppos += nbytes;
   up(&dev->sem);
   pr_info("\n WRITING function, nbytes=%d, pos=%d\n", nbytes, (int)*ppos);
