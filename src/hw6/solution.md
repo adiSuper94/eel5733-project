@@ -20,3 +20,18 @@
 - Since 2 thread have opened the device `count2` will be `2` and both the threads will be deadlocked waiting for it to go down to 1.
 - More specifically, the deadlock will happen in file `assignment6.c`, function `ec_ioctl`, in `MODE1` case's `wait_event_interuptible`. 
 - Test code is in `deadlock3.c`
+
+
+
+# Race Conditions
+
+## Race Condition 1 - concurrent read and write
+- In `MODE1` `e2_read` & `e2_write` the copy_to_user/copy_from_user might have a potential race. 
+- If we have a user space program read & write on multiple threads on same fd.
+## Race Condition 2
+- In `MODE1`  & `e2_write` the copy_from_user might have a potential race. 
+- If we have a user space program write on multiple threads on same fd.
+## Race Condition 3
+- In `MODE2` , both `e2_read` and `e2_write` call up on `sem1` after the copy to/from user space is done. This prevents the data race.
+## Race Condition 4
+- In `e2_release` all access/changes to counts are done after calling down on sem1. This prevents data race.
